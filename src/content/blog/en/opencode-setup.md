@@ -6,7 +6,7 @@ language: en
 alternate: /blog/opencode-setup/
 ---
 
-The problem with building with AI is usually not generating code. It is keeping context, boundaries, and judgment intact when execution speeds up. My OpenCode setup grew out of that tension, and I tested it on a project that could not remain a demo: Prince Club de Libros.
+The problem with building with AI is usually not generating code. It is keeping context, boundaries, and judgment intact when execution speeds up. My OpenCode setup grew out of that tension, and I tested it on a project that could not remain a demo: [Prince Club de Libros](https://prince-club-de-libros.nicolasdelrosario.com/).
 
 ## A real case, not a demo
 

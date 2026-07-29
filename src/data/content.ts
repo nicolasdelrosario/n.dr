@@ -32,7 +32,7 @@ export const content = {
     projects: [
       { name: 'WhatsApp n8n Server', type: 'own', description: 'REST API para automatización de WhatsApp con n8n.', stack: 'TypeScript · Hono · OpenAPI / Scalar · Docker · PostgreSQL · 26 estrellas', href: 'https://github.com/nicolasdelrosario/whatsapp-n8n-server' },
       { name: 'Inventra', type: 'own', description: 'SaaS multi-tenant de inventarios para PyMEs.', stack: 'Next.js · Elysia · Bun · Drizzle · PostgreSQL', href: 'https://inventra.nicolasdelrosario.com' },
-      { name: 'Prince Club de Libros', type: 'client', description: 'Catálogo web para librería con búsqueda, wishlist, contacto por WhatsApp y panel admin.', stack: 'Next.js · Supabase · Vercel', href: 'https://prince-club-de-libros.vercel.app' },
+      { name: 'Prince Club de Libros', type: 'client', description: 'Catálogo web para librería con búsqueda, wishlist, contacto por WhatsApp y panel admin.', stack: 'Next.js · Supabase · Vercel', href: 'https://prince-club-de-libros.nicolasdelrosario.com/' },
     ],
     experience: {
       title: 'Experiencia profesional',
@@ -63,7 +63,7 @@ export const content = {
     projects: [
       { name: 'WhatsApp n8n Server', type: 'own', description: 'REST API for WhatsApp automation with n8n.', stack: 'TypeScript · Hono · OpenAPI / Scalar · Docker · PostgreSQL · 26 stars', href: 'https://github.com/nicolasdelrosario/whatsapp-n8n-server' },
       { name: 'Inventra', type: 'own', description: 'Multi-tenant inventory SaaS for small and medium businesses.', stack: 'Next.js · Elysia · Bun · Drizzle · PostgreSQL', href: 'https://inventra.nicolasdelrosario.com' },
-      { name: 'Prince Club de Libros', type: 'client', description: 'Bookshop catalogue with search, wishlist, WhatsApp contact and admin panel.', stack: 'Next.js · Supabase · Vercel', href: 'https://prince-club-de-libros.vercel.app' },
+      { name: 'Prince Club de Libros', type: 'client', description: 'Bookshop catalogue with search, wishlist, WhatsApp contact and admin panel.', stack: 'Next.js · Supabase · Vercel', href: 'https://prince-club-de-libros.nicolasdelrosario.com/' },
     ],
     experience: {
       title: 'Professional experience',

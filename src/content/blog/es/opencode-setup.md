@@ -6,7 +6,7 @@ language: es
 alternate: /en/blog/opencode-setup/
 ---
 
-El problema de construir con IA no suele ser generar código. Es conservar el contexto, los límites y el criterio cuando la ejecución se acelera. Mi setup de OpenCode nació de esa tensión y lo probé en un proyecto que no podía quedarse en una demo: Prince Club de Libros.
+El problema de construir con IA no suele ser generar código. Es conservar el contexto, los límites y el criterio cuando la ejecución se acelera. Mi setup de OpenCode nació de esa tensión y lo probé en un proyecto que no podía quedarse en una demo: [Prince Club de Libros](https://prince-club-de-libros.nicolasdelrosario.com/).
 
 ## Un caso real, no una demo
 
