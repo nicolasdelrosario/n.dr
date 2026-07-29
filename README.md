@@ -22,4 +22,4 @@ npm run build
 - `src/styles/global.css` y `tokens.css`: sistema visual responsive.
 - `public/favicon.svg`: favicon mínimo.
 
-El proyecto no usa framework de UI ni dependencias adicionales aparte de Astro. El control de CV es visual hasta que exista un archivo real.
+El proyecto no usa framework de UI ni dependencias adicionales aparte de Astro.
