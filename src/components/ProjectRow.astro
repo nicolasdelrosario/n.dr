@@ -1,0 +1,10 @@
+---
+const { project, labels } = Astro.props;
+const kind = project.type === 'client' ? labels.client : labels.own;
+---
+<article class="project-row">
+  <div class="project-index" aria-hidden="true">{String(project.name).slice(0, 2).toUpperCase()}</div>
+  <div class="project-copy"><p class="project-kind">{kind}</p><h3>{project.name}</h3><p>{project.description}</p></div>
+  <div class="project-stack"><p class="project-kind">{labels.stack}</p><p>{project.stack}</p></div>
+  {project.href ? <a class="project-link" href={project.href} target="_blank" rel="noreferrer">{labels.visit}<span aria-hidden="true">↗</span></a> : <span class="project-link project-link--quiet">—</span>}
+</article>

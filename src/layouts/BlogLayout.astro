@@ -1,0 +1,7 @@
+---
+import BaseLayout from './BaseLayout.astro';
+const { copy, title, description, alternate } = Astro.props;
+---
+<BaseLayout copy={{ ...copy, title, description }} isBlog>
+  <div class="blog-shell"><header class="blog-header"><p class="eyebrow">{copy.nav.blog}</p><p class="blog-kicker">{copy.location}</p><h1>{title}</h1><p class="blog-description">{description}</p><a class="blog-language" href={alternate}>{copy.languageName}</a></header><slot /></div>
+</BaseLayout>

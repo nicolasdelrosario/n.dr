@@ -1,0 +1,21 @@
+:root {
+  color-scheme: light;
+  --color-paper: oklch(96% 0.018 82); --color-ink: oklch(20% 0.025 55); --color-muted: oklch(52% 0.025 70); --color-line: oklch(20% 0.025 55 / 0.22); --color-accent: oklch(63% 0.16 28); --color-focus: oklch(48% 0.14 255);
+  --font-body: ui-sans-serif, system-ui, sans-serif; --font-display: ui-serif, Georgia, serif; --font-mono: ui-monospace, monospace;
+  --space-1: 0.5rem; --space-2: 1rem; --space-3: 1.5rem; --space-4: 2rem; --space-5: 3rem; --space-6: 5rem; --space-7: 8rem;
+  --size-small: 0.72rem; --size-body: 1rem; --size-lead: clamp(1.4rem, 2.5vw, 2.4rem); --size-display: clamp(3rem, 8.4vw, 8.5rem);
+  --size-rail: 12rem; --size-content: 96rem; --size-marker: 0.6rem; --size-hero-note: 13rem; --size-column: 16rem; --size-experience: 30rem;
+  --size-nav-mobile: 0.64rem; --size-nav-narrow: 0.56rem; --size-nav-gap: 0.45rem;
+  --tracking-wide: 0.12em; --tracking-label: 0.09em; --tracking-link: 0.06em;
+  --leading-body: 1.45; --leading-tight: 0.94; --radius-full: 50%; --border-rule: 1px solid var(--color-line);
+  --opacity-hidden: 0; --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1); --duration-fast: 180ms; --duration-slow: 500ms; --duration-reduced: 0.01ms;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-paper: oklch(19% 0.018 255); --color-ink: oklch(91% 0.018 85); --color-muted: oklch(70% 0.025 85); --color-line: oklch(91% 0.018 85 / 0.22); --color-accent: oklch(66% 0.12 255); --color-focus: oklch(78% 0.1 255);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) { color-scheme: dark; --color-paper: oklch(19% 0.018 255); --color-ink: oklch(91% 0.018 85); --color-muted: oklch(70% 0.025 85); --color-line: oklch(91% 0.018 85 / 0.22); --color-accent: oklch(66% 0.12 255); --color-focus: oklch(78% 0.1 255); }
+}

@@ -1,0 +1,26 @@
+---
+import type { ExperienceEntry } from '../data/content';
+
+interface Props {
+  entries: ExperienceEntry[];
+  labels: { current: string; company: string; areas: string };
+}
+
+const { entries, labels } = Astro.props;
+---
+<ol class="experience-timeline">
+  {entries.map((entry) => (
+    <li class:list={['experience-entry', { 'is-current': entry.current }]}>
+      <span class="experience-marker" aria-hidden="true"></span>
+      <div class="experience-content">
+        <div class="experience-meta"><span>{entry.period}</span>{entry.current && <span class="experience-current">{labels.current}</span>}</div>
+        <h2>{entry.role}</h2>
+        {entry.href ? <a class="experience-company" href={entry.href} target="_blank" rel="noreferrer">{entry.company} <span aria-hidden="true">↗</span><span class="sr-only"> ({labels.company})</span></a> : <p class="experience-company">{entry.company}</p>}
+        <ul class="experience-bullets">
+          {entry.bullets.map((bullet) => <li>{bullet}</li>)}
+        </ul>
+        <p class="experience-stack"><span>{labels.areas}:</span> {entry.stack}</p>
+      </div>
+    </li>
+  ))}
+</ol>

@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectRow from '../components/ProjectRow.astro';
+import ExperienceTimeline from '../components/ExperienceTimeline.astro';
+import LanguageSwitch from '../components/LanguageSwitch.astro';
+import { content } from '../data/content';
+const copy = content.es;
+---
+<BaseLayout copy={copy}><section class="hero" id="intro"><p class="eyebrow">{copy.eyebrow}</p><div class="hero-grid"><h1>{copy.intro}</h1><div class="hero-note"><span class="marker"></span><p>{copy.labels.availability}</p></div></div><div class="hero-foot"><span>01—04</span><a href="#work">{copy.nav.work} <span aria-hidden="true">↓</span></a><a href="#contact">{copy.labels.email} <span aria-hidden="true">↓</span></a></div></section>
+<section class="work-section section-rule" id="work"><div class="section-heading"><p class="eyebrow">02 / {copy.labels.selected}</p><p class="section-aside">{copy.projects.length} proyectos</p></div><div class="projects">{copy.projects.map((project) => <ProjectRow project={project} labels={copy.labels} />)}</div></section>
+<section class="experience-section section-rule" id="experience"><div class="section-heading"><p class="eyebrow">03 / {copy.nav.experience}</p></div><h2 class="sr-only">{copy.experience.title}</h2><ExperienceTimeline entries={copy.experience.entries} labels={copy.labels} /></section>
+<section class="contact-section section-rule" id="contact"><p class="eyebrow">04 / {copy.nav.contact}</p><div class="contact-grid"><h2>{copy.labels.email}<br /><a href={`mailto:${copy.email}`}>{copy.email}</a></h2><div class="contact-links"><a href="https://github.com/nicolasdelrosario" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/nicolasdelrosario/" target="_blank" rel="noreferrer">LinkedIn ↗</a><a href={copy.cv} download>{copy.labels.soon}</a><a href="/blog/">{copy.writing}</a><LanguageSwitch label={copy.languageName} href={copy.languagePath} /></div></div></section>
+<footer><p>{copy.footer}</p><p>{copy.location}</p></footer></BaseLayout>

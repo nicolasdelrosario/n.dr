@@ -1,0 +1,18 @@
+---
+import LanguageSwitch from './LanguageSwitch.astro';
+const { copy } = Astro.props;
+const isBlog = Astro.url.pathname.includes('/blog');
+const home = copy.locale === 'en' ? '/en/' : '/';
+const blog = copy.locale === 'en' ? '/en/blog/' : '/blog/';
+---
+<aside class="side-rail" aria-label="Primary navigation">
+  <a class="wordmark" href={home} aria-label="Nicolas Del Rosario home">N<span>.</span>DR</a>
+  <nav>
+    <a href={isBlog ? home : '#intro'}>{copy.nav.intro}</a>
+    <a href={isBlog ? `${home}#work` : '#work'}>{copy.nav.work}</a>
+    <a href={isBlog ? `${home}#experience` : '#experience'}>{copy.nav.experience}</a>
+    <a href={isBlog ? `${home}#contact` : '#contact'}>{copy.nav.contact}</a>
+    <a href={blog}>{copy.nav.blog}</a>
+  </nav>
+  <div class="rail-meta"><LanguageSwitch label={copy.languageName} href={copy.languagePath} /><button class="language-switch theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label={copy.labels.switchToDarkTheme}><span data-theme-label>{copy.labels.switchToDarkTheme}</span></button><span>© 2026</span></div>
+</aside>
