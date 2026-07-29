@@ -2,6 +2,10 @@
 
 Portfolio personal bilingüe, estático y construido con Astro. Español en `/` e inglés en `/en/`.
 
+## Requisito
+
+El proyecto requiere Node.js 26.5.0. Si usas nvm, ejecuta `nvm use`.
+
 ## Desarrollo
 
 ```bash

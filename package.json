@@ -2,6 +2,18 @@
   "name": "nicolas-del-rosario-portfolio",
   "type": "module",
   "private": true,
-  "scripts": { "dev": "astro dev", "build": "astro build", "preview": "astro preview" },
-  "dependencies": { "astro": "^5.7.0" }
+  "engines": {
+    "node": ">=26.5.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "7.1.5"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
 }
