@@ -1,10 +1,35 @@
 ---
 import '../styles/global.css';
 import SidebarNav from '../components/SidebarNav.astro';
-const { copy, isBlog = false } = Astro.props;
+const { copy, alternate, isArticle = false } = Astro.props;
+const site = Astro.site ?? Astro.url;
+const canonical = new URL(Astro.url.pathname, site).href;
+const fallbackAlternate = copy.locale === 'en'
+  ? Astro.url.pathname.replace(/^\/en(?=\/|$)/, '') || '/'
+  : `/en${Astro.url.pathname === '/' ? '/' : Astro.url.pathname}`;
+const alternatePath = typeof alternate === 'string' && alternate.length > 0 ? alternate : fallbackAlternate;
+const alternateUrl = new URL(alternatePath.startsWith('/') ? alternatePath : `/${alternatePath}`, site).href;
+const locale = copy.locale === 'en' ? 'en_US' : 'es_ES';
+const alternateLocale = copy.locale === 'en' ? 'es_ES' : 'en_US';
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Nicolas Del Rosario',
+  url: new URL('/', site).href,
+  jobTitle: 'Software Developer',
+  email: `mailto:${copy.email}`,
+  sameAs: ['https://github.com/nicolasdelrosario', 'https://www.linkedin.com/in/nicolasdelrosario/'],
+  knowsAbout: ['Software development', 'Full-stack development', 'TypeScript', 'Node.js', 'React', 'Astro', 'APIs', 'Automation'],
+  address: { '@type': 'PostalAddress', addressLocality: 'Lima', addressCountry: 'PE' },
+};
 ---
 <!doctype html><html lang={copy.locale}><head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width" />
   <meta name="description" content={copy.description} /><meta name="theme-color" content="oklch(96% 0.018 82)" data-light-theme="oklch(96% 0.018 82)" data-dark-theme="oklch(14% 0.012 82)" data-light-label={copy.labels.switchToDarkTheme} data-dark-label={copy.labels.switchToLightTheme} data-light-action={copy.labels.switchToDarkTheme} data-dark-action={copy.labels.switchToLightTheme} />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" /><title>{copy.title}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" /><link rel="canonical" href={canonical} />
+  <link rel="alternate" hreflang="es" href={copy.locale === 'es' ? canonical : alternateUrl} /><link rel="alternate" hreflang="en" href={copy.locale === 'en' ? canonical : alternateUrl} /><link rel="alternate" hreflang="x-default" href={copy.locale === 'es' ? canonical : alternateUrl} />
+  <meta property="og:title" content={copy.title} /><meta property="og:description" content={copy.description} /><meta property="og:url" content={canonical} /><meta property="og:type" content={isArticle ? 'article' : 'website'} /><meta property="og:site_name" content="Nicolas Del Rosario" /><meta property="og:locale" content={locale} /><meta property="og:locale:alternate" content={alternateLocale} />
+  <meta name="twitter:card" content="summary" /><meta name="twitter:title" content={copy.title} /><meta name="twitter:description" content={copy.description} />
+  <script type="application/ld+json" set:html={JSON.stringify(personSchema)}></script>
+  <title>{copy.title}</title>
 </head><body><a class="skip-link" href="#main">Skip to content</a><SidebarNav copy={copy} /><main id="main"><slot /></main><script is:inline>(()=>{const saved=localStorage.getItem('theme');const root=document.documentElement;const initialTheme=saved||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');const themeMeta=document.querySelector('meta[name="theme-color"]');root.dataset.theme=initialTheme;const setTheme=(theme)=>{root.dataset.theme=theme;localStorage.setItem('theme',theme);const isDark=theme==='dark';const nextLabel=isDark?themeMeta?.dataset.darkLabel||'':themeMeta?.dataset.lightLabel||'';const nextAction=isDark?themeMeta?.dataset.darkAction||'':themeMeta?.dataset.lightAction||'';button?.setAttribute('aria-pressed',String(isDark));button?.setAttribute('aria-label',nextAction);if(label)label.textContent=nextLabel;if(themeMeta)themeMeta.setAttribute('content',isDark?themeMeta.dataset.darkTheme||'oklch(14% 0.012 82)':themeMeta.dataset.lightTheme||'oklch(96% 0.018 82)')};let button;let label;const init=()=>{button=document.querySelector('[data-theme-toggle]');label=document.querySelector('[data-theme-label]');setTheme(root.dataset.theme||'light');button?.addEventListener('click',()=>setTheme(root.dataset.theme==='dark'?'light':'dark'))};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();</script></body></html>
