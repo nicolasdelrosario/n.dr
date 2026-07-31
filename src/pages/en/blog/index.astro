@@ -3,6 +3,6 @@ import { getCollection } from 'astro:content';
 import BlogLayout from '../../../layouts/BlogLayout.astro';
 import { content } from '../../../data/content';
 const copy = content.en;
-const posts = (await getCollection('blog')).filter((post) => post.data.language === 'en');
+const posts = (await getCollection('blog')).filter((post) => post.data.language === 'en').sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
-<BlogLayout copy={copy} title="Blog" description="Notes on software, tools and development processes." alternate="/blog/"><section class="blog-index" aria-labelledby="blog-index-title"><h2 id="blog-index-title">Articles</h2><div class="blog-list">{posts.map((post) => <a class="blog-card" href={`/en/blog/${post.id.split('/').pop()}/`}><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('en-US')}</time><h3>{post.data.title}</h3><p>{post.data.description}</p><span>Read article <span aria-hidden="true">↗</span></span></a>)}</div></section></BlogLayout>
+<BlogLayout copy={copy} title="Blog" description="Notes on software, tools and development processes." alternate="/blog/"><section class="blog-index" aria-labelledby="blog-index-title"><h2 id="blog-index-title">Articles</h2><div class="blog-list">{posts.map((post) => <a class="blog-card" href={`/en/blog/${post.id.split('/').pop()}/`}><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' })}</time><h3>{post.data.title}</h3><p>{post.data.description}</p><span>Read article <span aria-hidden="true">↗</span></span></a>)}</div></section></BlogLayout>
