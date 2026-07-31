@@ -6,4 +6,4 @@ export async function getStaticPaths() { return (await getCollection('blog')).fi
 const { post } = Astro.props;
 const { Content } = await render(post);
 ---
-<BlogLayout copy={content.es} title={post.data.title} description={post.data.description} alternate={post.data.alternate} isArticle><article class="blog-article"><p class="blog-date"><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('es-PE', { dateStyle: 'long' })}</time></p><Content /></article></BlogLayout>
+<BlogLayout copy={{ ...content.es, date: post.data.date, author: post.data.author }} title={post.data.title} description={post.data.description} alternate={post.data.alternate} isArticle><article class="blog-article"><p class="blog-date"><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('es-PE', { dateStyle: 'long' })}</time></p><Content /></article></BlogLayout>

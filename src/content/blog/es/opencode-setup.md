@@ -1,30 +1,34 @@
 ---
 title: "Mi setup de OpenCode para construir con IA sin perder el criterio"
-description: "Cómo usé OpenCode, Spec Kit y memoria persistente para construir Prince Club de Libros con IA, desde la idea inicial hasta un producto funcional en producción."
+description: "Cómo trabajo con OpenCode e IA para convertir una idea en un producto real: el caso de Prince Club de Libros y un flujo con contexto, criterio y verificación."
 date: 2026-07-28
+author: Nicolas Del Rosario
 language: es
 alternate: /en/blog/opencode-setup/
 ---
 
-El problema de construir con IA no suele ser generar código. Es conservar el contexto, los límites y el criterio cuando la ejecución se acelera. Mi setup de OpenCode nació de esa tensión y lo probé en un proyecto que no podía quedarse en una demo: [Prince Club de Libros](https://prince-club-de-libros.nicolasdelrosario.com/).
+Construir con IA no consiste en pedir código y aceptar el resultado. Consiste en conservar el contexto, los límites y el criterio cuando la ejecución se acelera. Ese es el enfoque que aplico con OpenCode y que probé en un proyecto real: [Prince Club de Libros](https://prince-club-de-libros.nicolasdelrosario.com/).
 
 ## Un caso real, no una demo
 
-Prince Club de Libros es un catálogo editorial funcional para descubrir libros, consultar stock y ofertas, guardar una wishlist y contactar por WhatsApp. También necesitaba autenticación, un panel de administración e imágenes. La idea era sencilla; convertirla en un producto coherente, usable y desplegado exigía tomar muchas decisiones pequeñas sin perder el hilo.
+Prince Club de Libros es un catálogo editorial para descubrir libros, consultar stock y ofertas, guardar una wishlist y contactar por WhatsApp. También necesitaba autenticación, un panel de administración e imágenes. Su stack actual es Next.js 16 App Router, React 19, TypeScript, Tailwind CSS, shadcn/ui, Supabase para PostgreSQL, Auth, Storage y RLS, Resend SMTP y Vercel.
+
+La idea era sencilla; convertirla en un producto coherente, usable y desplegado exigía tomar muchas decisiones pequeñas sin perder el hilo.
 
 Ahí entró Spec Kit. No lo usé como una ceremonia adicional, sino como la forma de convertir la idea en una especificación, un diseño, tareas concretas y validaciones. La planificación terminó en 86 tareas. Ese número no es una métrica de productividad por sí mismo: hizo visible el alcance y permitió avanzar por piezas que se podían revisar.
 
-## El setup responde a problemas concretos
+## Un flujo de trabajo, no una caja negra
 
-Cada parte tiene una responsabilidad clara:
+Cada parte del stack de OpenCode tiene una responsabilidad concreta:
 
-- **CodeGraph** me permite entender símbolos, dependencias y rutas de llamada antes de editar. Resuelve el problema de tocar un archivo sin ver quién depende de él.
-- **Context7** recupera documentación actual de librerías y frameworks. Así no tengo que confiar en una respuesta genérica o en una API que cambió.
-- **Engram** conserva decisiones, aprendizajes y resúmenes entre sesiones. Evita que el contexto útil desaparezca cuando cierro la conversación.
+- **Luna** orquesta el trabajo. Según la tarea, uso **explorer** para entender el código, **reviewer** para revisarlo, **implementer** para cambiarlo y **architect** para los problemas que requieren más análisis.
 - **Ponytail** mantiene el alcance y la solución pequeños: primero cuestiona si algo necesita existir y luego busca el cambio mínimo que funciona.
-- **Routing y subagents** separan exploración, implementación y debugging. No todo problema merece el mismo nivel de razonamiento ni el mismo tipo de agente.
+- **Engram** conserva decisiones, aprendizajes y resúmenes entre sesiones, para que el contexto útil no desaparezca al cerrar una conversación.
+- **CodeGraph** permite entender símbolos, dependencias y rutas de llamada antes de editar cuando el proyecto tiene un índice disponible; sin ese índice, uso la exploración normal del repositorio.
+- **Context7** recupera documentación actual de librerías y frameworks, mientras **RTK** reduce el ruido de los comandos de terminal.
+- Los plugins locales y la configuración portable que mantengo en mis dotfiles hacen que este flujo sea reproducible entre proyectos y equipos.
 
-Las instrucciones persistentes de `AGENTS.md` conectan estas piezas: indican cómo explorar, cuándo editar, qué rol usar y cómo verificar. El objetivo no es automatizar el criterio, sino hacer que el flujo lo aplique de forma consistente.
+Las instrucciones persistentes de `AGENTS.md` conectan estas piezas: indican cómo explorar, cuándo editar, qué rol usar y cómo verificar. El objetivo no es automatizar el criterio ni afirmar que la IA hizo todo sola, sino hacer que el trabajo sea más trazable y consistente.
 
 ## Donde la integración puso a prueba el flujo
 
@@ -34,7 +38,7 @@ La IA ayudó a localizar y proponer correcciones, pero no sustituyó la verifica
 
 ## El resultado
 
-El proyecto tomó aproximadamente 3 días, con 40 commits, 86 tareas de Spec Kit, 10 migraciones y un producto funcional en producción. No presento estas cifras como una causalidad absoluta ni como una promesa de velocidad; describen el resultado de trabajar con ese flujo en este caso.
+El resultado fue un producto funcional en producción, con 40 commits, 86 tareas de Spec Kit y 13 migraciones. No presento estas cifras como una causalidad absoluta ni como una promesa de velocidad; describen el resultado de trabajar con ese flujo en este caso.
 
 Sin él, habría sido más fácil perder decisiones, repetir exploración, mezclar cambios poco acotados y terminar con menos confianza en los bordes del producto. Con él, el trabajo tuvo una memoria externa, límites visibles y puntos concretos de verificación.
 
