@@ -1,6 +1,6 @@
 ---
-title: "I Did Not Want Another Bot: I Built a WhatsApp API for n8n"
-description: "The technical story behind WhatsApp n8n Server: a protected REST API for automating WhatsApp, connecting n8n workflows, and keeping the system operable."
+title: "The Message Was the Easy Part"
+description: "What it took to turn a WhatsApp Web session into an API that n8n could safely retry."
 date: 2026-08-04
 author: Nicolas Del Rosario
 language: en
@@ -8,93 +8,44 @@ alternate: /blog/whatsapp-n8n-server/
 published: true
 ---
 
-There is a difference between automating a message and building an integration that someone can operate every day. The first case may only need an HTTP request. The second needs authentication, retries, traceability, limits, and a clear way to know whether WhatsApp is actually ready.
+Sending a WhatsApp message from [n8n](https://n8n.io/) takes one HTTP request. The first time it works, the project looks finished. Then the workflow retries, the session is not ready yet, or the process restarts after queuing a broadcast. At that point, the message is no longer the interesting part.
 
-That was the problem behind [WhatsApp n8n Server](https://github.com/nicolasdelrosario/whatsapp-n8n-server): a REST API that connects WhatsApp Web to [n8n](https://n8n.io/) without hiding the difficult parts behind a fragile workflow.
+I built [WhatsApp n8n Server](https://github.com/nicolasdelrosario/whatsapp-n8n-server) to turn a WhatsApp Web session into an interface a workflow could query and retry. It does not hide the fragility of that session. It turns it into explicit states, contracts, and limits.
 
-At the time of writing, the repository has 26 stars on GitHub. That number is a small but useful signal: there is interest in a piece of software that started as a concrete need and became an open-source project with a more complete architecture than it initially seemed to require.
+## WhatsApp is not always ready
 
-## The problem was not sending a message
+The server uses `whatsapp-web.js`. On first startup, it displays a QR code that must be scanned from a phone; after that, it keeps the session locally or in PostgreSQL through `RemoteAuth`. Delete the Docker session volume and you have to authenticate again. That one detail already separates a demo from something a person can operate.
 
-Sending a text is the easy part. Things become more complicated when the message belongs to a real process:
+It also meant separating two questions that sound alike but are not: is the process responding, and can WhatsApp send a message? The liveness endpoint answers the first. The readiness endpoint only succeeds when the session can handle traffic. n8n does not have to guess whether it can proceed: it can check state before running an operation.
 
-- A workflow may retry and should not duplicate an operation.
-- WhatsApp may be authenticating, disconnected, or not ready yet.
-- A broadcast should run without blocking the HTTP request.
-- An incoming event must reach n8n and be verifiable.
-- An integration needs to show what is happening when something fails.
+The API uses `x-api-key`, but the point is not to add a barrier by default. It gives n8n a conventional HTTP interface while the server handles the browser, the session, and their transitions.
 
-That is why the project exposes a protected API with an API key, liveness and readiness healthchecks, OpenAPI documentation, and a Scalar interface. n8n consumes a normal HTTP interface while the server manages the session and the communication with WhatsApp Web.
+## n8n retries
 
-## A WhatsApp session behind an API
+Retries are a good idea until they repeat something that should only happen once. A workflow can send a notification again, create a second broadcast, or repeat an operation tied to an order.
 
-The server uses `whatsapp-web.js` to communicate with WhatsApp Web. On the first startup it generates a QR code that is scanned from the phone. The session can then be kept locally or stored in PostgreSQL through `RemoteAuth`.
+Protected `POST` requests therefore accept `Idempotency-Key`. If n8n repeats the same request with the same key and body, it gets the original response. Reusing that key with a different body returns `409 Conflict`. The key can come from an n8n execution ID or a business operation: something stable that survives an attempt.
 
-Docker makes startup reproducible and includes the environment required by Chromium. The session volume matters: deleting it means scanning the QR code again. It may sound like a minor operational detail, but this is exactly the kind of detail that turns a working demo into a service someone can maintain.
+This is not a universal solution. The idempotency cache lives in process memory, keeps keys for 24 hours, and disappears when the process restarts. It is not shared between replicas either. The project does not present that as distributed infrastructure; it makes clear when it would need to be replaced.
 
-The API separates WhatsApp state from the operations n8n needs to perform:
+## A broadcast takes time
 
-- `GET /status` reports the connection state.
-- `GET /qr-code` returns the current QR state.
-- `POST /send-message` sends an individual message.
-- `POST /reply-message` replies to an existing message.
-- `POST /broadcast-message` creates a broadcast job.
-- `GET /broadcasts/:id` returns the job result.
+Sending a message to one hundred recipients should not leave an HTTP request open until the final delivery. `POST /broadcast-message` creates a job and returns a `jobId`. The workflow can save that identifier, move on, and query the result later.
 
-All protected endpoints require `x-api-key`. Interactive documentation is available at `/api/v1/docs`, and the OpenAPI contract is available at `/api/v1/openapi.json`.
+The queue processes recipients sequentially, removes duplicates after normalizing numbers, and observes a configurable delay. Again, the boundary matters: the queue is in memory. If the process crashes, jobs are lost. For a small automation that keeps complexity down; for replicas or durable delivery, it calls for a persistent queue.
 
-## Broadcasts without blocking the workflow
+## A webhook needs proof
 
-A message sent to several recipients should not keep a request open while every delivery takes place. The server creates a job and returns an identifier:
+The integration works in the other direction as well. When a message arrives, the server can send it to an n8n webhook. But a private URL does not prove where an event came from.
 
-```json
-{
-  "status": "queued",
-  "jobId": "95d8baf4-5b45-4af4-8a9b-2e9d7e8fbe7b"
-}
-```
+Every delivery carries an HMAC SHA-256 signature calculated from the original JSON body using an operator-provided secret. The receiver must verify it before processing the content. Transient errors are retried, but authenticity remains the consumer's responsibility.
 
-n8n can store that `jobId` and check its status later. The queue processes recipients sequentially, removes duplicates after normalizing phone numbers, and respects a configurable delay between deliveries.
+That boundary mattered more than another feature. Without it, an endpoint that responds to incoming messages cannot distinguish a real event from a fabricated request.
 
-This solution is intentionally simple. The queue lives in memory, so jobs are lost when the process restarts and are not shared between replicas. It is not trying to be a distributed system yet. It provides a clear foundation for smaller automations and leaves the exact point visible where a persistent queue would be needed as volume grows.
+## What it does not solve
 
-## Retrying without duplicating actions
+WhatsApp Web is not an official WhatsApp API. This project depends on its availability and behaviour. It covers text messages, broadcasts, and webhooks, but not media, templates, or multiple sessions. Session storage can use PostgreSQL, while broadcasts and idempotency keys are still not durable.
 
-Automated workflows often retry. If a request creates an order, notification, or broadcast, repeating it without control can have real consequences.
-
-That is why protected `POST` requests accept an `Idempotency-Key`. When n8n repeats a request with the same key and body, it receives the original response. If it reuses the key with a different body, the server responds with `409 Conflict`.
-
-Idempotency is also local to the process and retained for 24 hours. That is enough for the current use case, but the README makes the limit explicit: keys are not shared between replicas and do not survive a restart. Documenting that boundary is more useful than pretending an in-memory cache solves every scenario.
-
-## Incoming messages and trust
-
-The integration also works in the other direction. When a message arrives, the server can send it to an n8n webhook with a payload containing the event, message ID, sender, chat, and content.
-
-Each webhook is signed with HMAC SHA-256 using a secret configured by the operator. n8n or the receiving service must verify the signature against the original JSON body before processing it. Transient failures are retried, but authenticity validation remains the consumer's responsibility.
-
-That boundary matters. A webhook is not trustworthy merely because it comes from a private URL. The receiver must be able to prove that the event came from the expected server and that its body was not changed in transit.
-
-## Operability before magic
-
-Besides WhatsApp operations, the server includes controls that often appear too late:
-
-- Rate limiting per API key.
-- `X-Request-Id` for request correlation.
-- Basic Prometheus-compatible counters.
-- Separate endpoints to tell whether the process is alive and ready for traffic.
-- Input validation with schemas and consistent HTTP errors.
-- Tests for the domain, controllers, HTTP layer, retries, webhooks, persistence, and the queue.
-
-The project is organized around a separation between domain, use cases, and infrastructure. This is not decorative architecture: it makes rules such as phone-number normalization and idempotency testable without starting Chromium for every test.
-
-## What I learned building it
-
-The most important decision was treating limits as part of the design. WhatsApp Web is not the same as an official API, an in-memory queue is not distributed infrastructure, and an HTTP healthcheck alone does not guarantee that an account is ready to send messages.
-
-I also confirmed that a useful integration does not need to begin with every possible feature. The project currently focuses on text messages, broadcasts, and webhooks. Media, templates, and multiple sessions are not included yet. Keeping the scope visible makes the API easier to understand and ensures future decisions respond to real needs instead of imaginary scenarios.
-
-WhatsApp n8n Server started with a simple idea: make an n8n automation possible. It became a more interesting exercise: turning a WhatsApp Web session into a service with a contract, basic security, observability, and a clear path to grow.
-
-The 26 stars are not the project's conclusion. They are a signal that it is worth continuing to build on it.
+That does not make the server accidentally incomplete. It defines its scope. The work was not making one message leave once. It was making the next failure observable, the next retry non-duplicating, and the next limit visible instead of buried inside a workflow.
 
 [View WhatsApp n8n Server on GitHub](https://github.com/nicolasdelrosario/whatsapp-n8n-server)
