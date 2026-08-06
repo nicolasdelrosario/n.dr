@@ -25,16 +25,6 @@ This portfolio is built with Astro and presents the work, professional experienc
 - CSS with shared design tokens
 - Static generation with localized routes and sitemap support
 
-## Requirements
-
-- Node.js 26.5.0 or newer
-
-If you use nvm:
-
-```bash
-nvm use
-```
-
 ## Development
 
 ```bash
