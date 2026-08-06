@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import SidebarNav from '../components/SidebarNav.astro';
 import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
 const { copy, alternate, isArticle = false } = Astro.props;
 const site = Astro.site ?? Astro.url;
 const canonical = new URL(Astro.url.pathname, site).href;
@@ -39,6 +40,7 @@ const articleSchema = isArticle ? {
 <!doctype html><html lang={copy.locale}><head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width" />
   <Analytics />
+  <SpeedInsights />
   <meta name="description" content={copy.description} /><meta name="author" content="Nicolas Del Rosario" /><meta name="theme-color" content="oklch(96% 0.018 82)" data-light-theme="oklch(96% 0.018 82)" data-dark-theme="oklch(14% 0.012 82)" data-light-label={copy.labels.switchToDarkTheme} data-dark-label={copy.labels.switchToLightTheme} data-light-action={copy.labels.switchToDarkTheme} data-dark-action={copy.labels.switchToLightTheme} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" /><link rel="canonical" href={canonical} />
   <link rel="alternate" hreflang="es" href={copy.locale === 'es' ? canonical : alternateUrl} /><link rel="alternate" hreflang="en" href={copy.locale === 'en' ? canonical : alternateUrl} /><link rel="alternate" hreflang="x-default" href={copy.locale === 'es' ? canonical : alternateUrl} />
