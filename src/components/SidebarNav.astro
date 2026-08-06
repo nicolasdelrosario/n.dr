@@ -27,6 +27,21 @@ const blog = copy.locale === 'en' ? '/en/blog/' : '/blog/';
     rail?.classList.toggle('is-nav-open', open);
     toggle?.setAttribute('aria-expanded', String(open));
   };
-  toggle?.addEventListener('click', () => setOpen(!rail?.classList.contains('is-nav-open')));
+  toggle?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    setOpen(!rail?.classList.contains('is-nav-open'));
+  });
   links?.addEventListener('click', () => setOpen(false));
+  document.addEventListener('click', (event) => {
+    if (rail && !rail.contains(event.target)) setOpen(false);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && rail?.classList.contains('is-nav-open')) {
+      setOpen(false);
+      toggle?.focus();
+    }
+  });
+  matchMedia('(max-width: 48rem)').addEventListener('change', (event) => {
+    if (!event.matches) setOpen(false);
+  });
 </script>
