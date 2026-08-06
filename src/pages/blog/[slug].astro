@@ -2,7 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import { content } from '../../data/content';
-export async function getStaticPaths() { return (await getCollection('blog')).filter((post) => post.data.language === 'es').map((post) => ({ params: { slug: post.id.split('/').pop() }, props: { post } })); }
+export async function getStaticPaths() { return (await getCollection('blog')).filter((post) => post.data.language === 'es' && post.data.published).map((post) => ({ params: { slug: post.id.split('/').pop() }, props: { post } })); }
 const { post } = Astro.props;
 const { Content } = await render(post);
 ---

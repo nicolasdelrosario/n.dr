@@ -5,6 +5,7 @@ date: 2026-07-28
 author: Nicolas Del Rosario
 language: es
 alternate: /en/blog/opencode-setup/
+published: true
 ---
 
 Construir con IA no consiste en pedir código y aceptar el resultado. Consiste en conservar el contexto, los límites y el criterio cuando la ejecución se acelera. Ese es el enfoque que aplico con OpenCode y que probé en un proyecto real: [Prince Club de Libros](https://prince-club-de-libros.nicolasdelrosario.com/).

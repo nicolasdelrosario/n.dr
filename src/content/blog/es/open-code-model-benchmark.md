@@ -5,6 +5,7 @@ date: 2026-08-09
 author: Nicolas Del Rosario
 language: es
 alternate: /en/blog/open-code-model-benchmark/
+published: false
 ---
 
 No existe un mejor modelo universal. El modelo que ayuda a encontrar una dependencia no tiene por qué ser el que conviene para revisar un cambio o tomar una decisión de arquitectura. En un flujo real, la pregunta importante es qué trabajo debe hacer cada modelo y qué riesgo tiene equivocarse.

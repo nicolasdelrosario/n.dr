@@ -5,6 +5,7 @@ date: 2026-08-09
 author: Nicolas Del Rosario
 language: en
 alternate: /blog/open-code-model-benchmark/
+published: false
 ---
 
 There is no single best model. The model that helps locate a dependency is not necessarily the one to use for reviewing a change or making an architectural decision. In a real workflow, the important question is what work each model should do and how costly it is when it gets that work wrong.

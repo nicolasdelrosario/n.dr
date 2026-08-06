@@ -1,10 +1,11 @@
 ---
 title: "No quería otro bot: construí una API de WhatsApp para n8n"
 description: "La historia técnica detrás de WhatsApp n8n Server: una API REST protegida para automatizar WhatsApp, conectar workflows de n8n y mantener el sistema operable."
-date: 2026-08-16
+date: 2026-08-04
 author: Nicolas Del Rosario
 language: es
 alternate: /en/blog/whatsapp-n8n-server/
+published: true
 ---
 
 Hay una diferencia entre automatizar un mensaje y construir una integración que alguien pueda operar todos los días. El primer caso puede resolverse con una llamada HTTP. El segundo necesita autenticación, reintentos, trazabilidad, límites y una forma clara de saber si WhatsApp está realmente listo.

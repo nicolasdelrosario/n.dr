@@ -5,6 +5,7 @@ date: 2026-08-03
 author: Nicolas Del Rosario
 language: es
 alternate: /en/blog/spec-driven-development/
+published: false
 ---
 
 Construir rápido puede parecer una ventaja hasta que el equipo descubre que ha construido el sistema equivocado. En procesos B2B, el coste de corregir esa dirección no está solo en el código: también aparece en las decisiones comerciales, la operación y la confianza de las personas que dependen del sistema.

@@ -5,6 +5,7 @@ date: 2026-07-28
 author: Nicolas Del Rosario
 language: en
 alternate: /blog/opencode-setup/
+published: true
 ---
 
 Building with AI is not about asking for code and accepting the result. It is about keeping context, boundaries, and judgment intact when execution speeds up. That is the approach I use with OpenCode, tested on a real project: [Prince Club de Libros](https://prince-club-de-libros.nicolasdelrosario.com/).
