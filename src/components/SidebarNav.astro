@@ -7,12 +7,26 @@ const blog = copy.locale === 'en' ? '/en/blog/' : '/blog/';
 ---
 <aside class="side-rail" aria-label="Primary navigation">
   <a class="wordmark" href={home} aria-label="Nicolas Del Rosario home">N<span>.</span>DR</a>
-  <nav>
+  <nav class="primary-nav">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-links">{copy.locale === 'en' ? 'Menu' : 'Menú'}</button>
+    <div class="nav-links" id="primary-links">
     <a href={isBlog ? home : '#intro'}>{copy.nav.intro}</a>
     <a href={isBlog ? `${home}#work` : '#work'}>{copy.nav.work}</a>
     <a href={isBlog ? `${home}#experience` : '#experience'}>{copy.nav.experience}</a>
     <a href={isBlog ? `${home}#contact` : '#contact'}>{copy.nav.contact}</a>
     <a href={blog}>{copy.nav.blog}</a>
+    </div>
   </nav>
   <div class="rail-meta"><LanguageSwitch label={copy.languageName} href={copy.languagePath} /><button class="language-switch theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label={copy.labels.switchToDarkTheme}><span data-theme-label>{copy.labels.switchToDarkTheme}</span></button><span>© 2026</span></div>
 </aside>
+<script>
+  const rail = document.querySelector('.side-rail');
+  const toggle = rail?.querySelector('.nav-toggle');
+  const links = rail?.querySelector('.nav-links');
+  const setOpen = (open) => {
+    rail?.classList.toggle('is-nav-open', open);
+    toggle?.setAttribute('aria-expanded', String(open));
+  };
+  toggle?.addEventListener('click', () => setOpen(!rail?.classList.contains('is-nav-open')));
+  links?.addEventListener('click', () => setOpen(false));
+</script>
