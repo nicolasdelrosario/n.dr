@@ -1,6 +1,6 @@
 ---
-title: "My OpenCode Setup for Building with AI Without Losing Judgment"
-description: "How I work with OpenCode and AI to turn an idea into a real product: the Prince Club de Libros case and a workflow built around context, judgment, and verification."
+title: "My OpenCode Stack for Building with AI Without Losing Judgment"
+description: "How I organize exploration, implementation, review, memory, documentation, and design when working with AI."
 date: 2026-07-28
 author: Nicolas Del Rosario
 language: en
@@ -8,39 +8,53 @@ alternate: /blog/opencode-setup/
 published: true
 ---
 
-Building with AI is not about asking for code and accepting the result. It is about keeping context, boundaries, and judgment intact when execution speeds up. That is the approach I use with OpenCode, tested on a real project: [Prince Club de Libros](https://prince-club-de-libros.nicolasdelrosario.com/).
+I do not want an agent writing code before it understands what is changing. I also do not want to repeat repository exploration every time I return to a task. My OpenCode stack exists to solve those two problems: separate the work, retain decisions, and leave a concrete way to verify the result.
 
-## A real case, not a demo
+It is not a recipe for building faster at any cost. It is the set of boundaries I use so that AI does not turn a small change into a large answer that is difficult to review.
 
-Prince Club de Libros is a book catalogue for discovering books, checking stock and offers, saving a wishlist, and getting in touch through WhatsApp. It also needed authentication, an admin panel, and images. Its current stack is Next.js 16 App Router, React 19, TypeScript, Tailwind CSS, shadcn/ui, Supabase for PostgreSQL, Auth, Storage, and RLS, Resend SMTP, and Vercel.
+## I start by understanding, not editing
 
-The idea was simple; turning it into a coherent, usable, deployed product required many small decisions without losing the thread.
+The first step is not opening a file and asking for a solution. It is locating the affected flow: which components use it, where information enters, which rules are shared by different paths, and which parts should not be touched.
 
-That is where Spec Kit came in. I did not use it as an extra ceremony, but as the way to turn the idea into a specification, a design, concrete tasks, and validations. The plan ended up with 86 tasks. That number is not a productivity metric on its own: it made the scope visible and let me move through pieces that could be reviewed.
+For that, I use OpenCode's exploration role. When a project has an available index, CodeGraph helps trace symbols and call paths; without one, normal repository exploration does the same job. The tool changes, but the rule does not: before editing a function, understand who depends on it.
 
-## A workflow, not a black box
+If a decision depends on a library, an API, or an external service, I check its current documentation through Context7. I do not use documentation to decorate an answer. I use it to test a hypothesis before turning it into code.
 
-Each part of the OpenCode stack has a specific responsibility:
+## Each role has one responsibility
 
-- **Luna** orchestrates the work. Depending on the task, I use **explorer** to understand the code, **reviewer** to review it, **implementer** to change it, and **architect** for problems that need deeper analysis.
-- **Ponytail** keeps the scope and solution small: first question whether something needs to exist, then look for the smallest change that works.
-- **Engram** preserves decisions, lessons, and summaries between sessions, so useful context does not disappear when I close a conversation.
-- **CodeGraph** helps me understand symbols, dependencies, and call paths before editing when the project has an index available; without one, I use the repository's normal exploration tools.
-- **Context7** retrieves current documentation for libraries and frameworks, while **RTK** reduces terminal command noise.
-- Local plugins and portable configuration maintained in my dotfiles make the workflow reproducible across projects and machines.
+OpenCode lets me separate exploration, implementation, review, and decisions with broader consequences. That division matters more than the name of any model.
 
-Persistent instructions in `AGENTS.md` connect these pieces: they define how to explore, when to edit, which role to use, and how to verify. The goal is not to automate judgment or claim that AI did everything alone, but to make the work more traceable and consistent.
+- **Explorer** traverses the project and gathers evidence before a change exists.
+- **Implementer** changes files and runs the necessary verification.
+- **Reviewer** looks for regressions, risks, and cases a change may have missed.
+- **Architect** is reserved for architecture, security, performance, or complex debugging decisions.
 
-## Where integration tested the workflow
+Luna coordinates implementation work. Terra is reserved for analysis that genuinely needs more depth. I do not assign a model by prestige or ask every model to do everything: each role has a scope that can be reviewed.
 
-After the MVP was generated, problems appeared at the edges: authentication recovery did not behave as expected, image policies blocked valid cases, some errors were not handled well, and offer selection was not deterministic.
+## Memory does not replace the repository
 
-AI helped locate and propose fixes, but it did not replace verification. Reviewing the full flow, checking the documentation, and testing those cases is what fixed them. The setup proved useful precisely there: decisions were bounded, context could be recovered, and every adjustment had a clear validation.
+Engram saves decisions, discoveries, and summaries between sessions. It is useful when a fix depends on a previous conversation or when I need to remember why an alternative was rejected. Code and tests remain the source of truth; memory keeps useful context from disappearing when a session ends.
 
-## The result
+My [persistent OpenCode instructions](https://github.com/nicolasdelrosario/dotfiles/blob/main/opencode/AGENTS.md) connect the flow: they specify how to explore, when to check documentation, which kind of change to delegate, and how to verify it. The goal is not to write rules for every possible case. It is to reduce the decisions I would otherwise need to explain from scratch.
 
-The result was a functional product in production, with 40 commits, 86 Spec Kit tasks, and 13 migrations. I am not presenting these figures as absolute causation or as a promise of speed; they describe the result of using this workflow in this case.
+## The smallest solution still needs review
 
-Without it, it would have been easier to lose decisions, repeat exploration, mix in changes with unclear boundaries, and end up less confident in the product’s edges. With it, the work had external memory, visible limits, and concrete verification points.
+Ponytail acts as a brake on default complexity. Before adding a new layer, it asks whether the problem already has a solution in the repository, the standard library, or the platform. Its value is not writing fewer lines for its own sake; it is avoiding changes that no one can justify later.
 
-AI accelerates execution, but judgment remains human. Context, boundaries, memory, and verification are what turn that speed into reliable software.
+RTK makes terminal commands easier to read. It is a small part of the stack, but useful when verification is part of daily work rather than a step remembered at the end.
+
+## Design is reviewed too
+
+Hallmark comes in when a change affects an interface. It does not decide the product or replace an accessibility review. It helps prevent a generic visual outcome: it preserves a site's tokens and visual language, reviews structure, and requires checking mobile behaviour.
+
+On this portfolio, Hallmark does not mean replacing every page with a new aesthetic. It means preserving the existing side rail, typography, and palette while fixing concrete problems, such as navigation that did not fit on mobile. Design is treated as code: it has constraints, states, and possible regressions.
+
+## Where it was tested
+
+I tested this flow while building [Prince Club de Libros](https://prince-club-de-libros.nicolasdelrosario.com/), a catalogue with stock, offers, a wishlist, authentication, images, WhatsApp contact, and administration.
+
+The problems appeared at the edges. Authentication recovery did not behave as expected, some image policies blocked valid cases, errors were not handled consistently, and offer selection was not deterministic. None of those could be solved by reading one file or accepting a model's first proposal.
+
+The stack was useful because it gave the investigation an order: trace the flow, check what a service promised, change the correct point, review the change, and test the case that motivated it. It did not prevent errors. It made it harder to hide them behind a convincing answer.
+
+That is what I want from working with AI: not a code factory, but a process that makes clear what changed, why it changed, and how I know it did not break something else.

@@ -1,6 +1,6 @@
 ---
-title: "Mi setup de OpenCode para construir con IA sin perder el criterio"
-description: "Cómo trabajo con OpenCode e IA para convertir una idea en un producto real: el caso de Prince Club de Libros y un flujo con contexto, criterio y verificación."
+title: "Mi stack de OpenCode para construir con IA sin perder el criterio"
+description: "Cómo organizo exploración, implementación, revisión, memoria, documentación y diseño al trabajar con IA."
 date: 2026-07-28
 author: Nicolas Del Rosario
 language: es
@@ -8,39 +8,53 @@ alternate: /en/blog/opencode-setup/
 published: true
 ---
 
-Construir con IA no consiste en pedir código y aceptar el resultado. Consiste en conservar el contexto, los límites y el criterio cuando la ejecución se acelera. Ese es el enfoque que aplico con OpenCode y que probé en un proyecto real: [Prince Club de Libros](https://prince-club-de-libros.nicolasdelrosario.com/).
+No quiero que un agente escriba código antes de entender qué está cambiando. Tampoco quiero repetir la exploración de un repositorio cada vez que retomo una tarea. Mi stack de OpenCode existe para resolver esas dos cosas: separar el trabajo, conservar las decisiones y dejar una forma concreta de comprobar el resultado.
 
-## Un caso real, no una demo
+No es una receta para construir más rápido a cualquier precio. Es el conjunto de límites que uso para que la IA no convierta un cambio pequeño en una respuesta grande y difícil de revisar.
 
-Prince Club de Libros es un catálogo editorial para descubrir libros, consultar stock y ofertas, guardar una wishlist y contactar por WhatsApp. También necesitaba autenticación, un panel de administración e imágenes. Su stack actual es Next.js 16 App Router, React 19, TypeScript, Tailwind CSS, shadcn/ui, Supabase para PostgreSQL, Auth, Storage y RLS, Resend SMTP y Vercel.
+## Empiezo por entender, no por editar
 
-La idea era sencilla; convertirla en un producto coherente, usable y desplegado exigía tomar muchas decisiones pequeñas sin perder el hilo.
+El primer paso no es abrir un archivo y pedir una solución. Es ubicar el flujo afectado: qué componentes lo usan, dónde entra la información, qué reglas comparten los distintos caminos y qué partes no conviene tocar.
 
-Ahí entró Spec Kit. No lo usé como una ceremonia adicional, sino como la forma de convertir la idea en una especificación, un diseño, tareas concretas y validaciones. La planificación terminó en 86 tareas. Ese número no es una métrica de productividad por sí mismo: hizo visible el alcance y permitió avanzar por piezas que se podían revisar.
+Para eso uso el rol de exploración de OpenCode. Cuando un proyecto tiene un índice disponible, CodeGraph ayuda a seguir símbolos y rutas de llamada; si no lo tiene, la exploración normal del repositorio cumple el mismo trabajo. La herramienta cambia, pero la regla no: antes de editar una función hay que entender quién depende de ella.
 
-## Un flujo de trabajo, no una caja negra
+Si una decisión depende de una librería, una API o un servicio externo, consulto su documentación actual con Context7. No uso la documentación para decorar una respuesta: la uso para contrastar una hipótesis antes de convertirla en código.
 
-Cada parte del stack de OpenCode tiene una responsabilidad concreta:
+## Cada rol tiene una responsabilidad
 
-- **Luna** orquesta el trabajo. Según la tarea, uso **explorer** para entender el código, **reviewer** para revisarlo, **implementer** para cambiarlo y **architect** para los problemas que requieren más análisis.
-- **Ponytail** mantiene el alcance y la solución pequeños: primero cuestiona si algo necesita existir y luego busca el cambio mínimo que funciona.
-- **Engram** conserva decisiones, aprendizajes y resúmenes entre sesiones, para que el contexto útil no desaparezca al cerrar una conversación.
-- **CodeGraph** permite entender símbolos, dependencias y rutas de llamada antes de editar cuando el proyecto tiene un índice disponible; sin ese índice, uso la exploración normal del repositorio.
-- **Context7** recupera documentación actual de librerías y frameworks, mientras **RTK** reduce el ruido de los comandos de terminal.
-- Los plugins locales y la configuración portable que mantengo en mis dotfiles hacen que este flujo sea reproducible entre proyectos y equipos.
+OpenCode me permite separar exploración, implementación, revisión y decisiones de mayor alcance. Esa división es más importante que el nombre de cada modelo.
 
-Las instrucciones persistentes de `AGENTS.md` conectan estas piezas: indican cómo explorar, cuándo editar, qué rol usar y cómo verificar. El objetivo no es automatizar el criterio ni afirmar que la IA hizo todo sola, sino hacer que el trabajo sea más trazable y consistente.
+- **Explorer** recorre el proyecto y reúne evidencia antes de que exista un cambio.
+- **Implementer** modifica los archivos y ejecuta la verificación necesaria.
+- **Reviewer** busca regresiones, riesgos y casos que el cambio pudo dejar fuera.
+- **Architect** queda para decisiones de arquitectura, seguridad, rendimiento o depuración compleja.
 
-## Donde la integración puso a prueba el flujo
+Luna coordina el trabajo de implementación. Terra queda reservado para análisis que realmente necesitan más profundidad. No asigno un modelo por prestigio ni intento que todos hagan de todo: cada rol tiene un alcance que se puede revisar.
 
-Después de generar el MVP aparecieron problemas en los bordes: la recuperación de autenticación no se comportaba como esperaba, las políticas de imágenes bloqueaban casos válidos, algunos errores no se manejaban bien y la selección de ofertas no era determinista.
+## La memoria no reemplaza el repositorio
 
-La IA ayudó a localizar y proponer correcciones, pero no sustituyó la verificación. Revisar el flujo completo, contrastar la documentación y probar esos casos fue lo que permitió corregirlos. El valor del setup apareció precisamente ahí: las decisiones estaban acotadas, el contexto se podía recuperar y cada ajuste tenía una validación clara.
+Engram guarda decisiones, descubrimientos y resúmenes entre sesiones. Es útil cuando un arreglo depende de una conversación previa o cuando necesito recordar por qué una alternativa se descartó. El código y las pruebas siguen siendo la fuente de verdad; la memoria evita que el contexto útil desaparezca al cerrar la sesión.
 
-## El resultado
+Mis [instrucciones persistentes de OpenCode](https://github.com/nicolasdelrosario/dotfiles/blob/main/opencode/AGENTS.md) conectan el flujo: indican cómo explorar, cuándo consultar documentación, qué tipo de cambio delegar y cómo verificarlo. El objetivo no es escribir reglas para cada caso posible. Es reducir las decisiones que tendría que volver a explicar desde cero.
 
-El resultado fue un producto funcional en producción, con 40 commits, 86 tareas de Spec Kit y 13 migraciones. No presento estas cifras como una causalidad absoluta ni como una promesa de velocidad; describen el resultado de trabajar con ese flujo en este caso.
+## La solución más pequeña también necesita revisión
 
-Sin él, habría sido más fácil perder decisiones, repetir exploración, mezclar cambios poco acotados y terminar con menos confianza en los bordes del producto. Con él, el trabajo tuvo una memoria externa, límites visibles y puntos concretos de verificación.
+Ponytail funciona como un freno contra la complejidad por defecto. Antes de añadir una capa nueva, obliga a preguntar si el problema ya tiene una solución en el repositorio, en la librería estándar o en la plataforma. Su valor no está en escribir menos líneas por deporte; está en evitar cambios que después nadie puede justificar.
 
-La IA acelera la ejecución, pero el criterio sigue siendo humano. El contexto, los límites, la memoria y la verificación son lo que convierte esa velocidad en software confiable.
+RTK mantiene los comandos de terminal más legibles. Es una pieza pequeña, pero útil cuando la verificación forma parte del trabajo diario y no un paso que se recuerda al final.
+
+## El diseño también se revisa
+
+Hallmark entra cuando el cambio afecta una interfaz. No decide el producto ni sustituye una revisión de accesibilidad. Me ayuda a evitar una salida visual genérica: conserva los tokens y el lenguaje del sitio, revisa la estructura y obliga a comprobar la respuesta en móvil.
+
+En este portfolio, por ejemplo, el criterio Hallmark no significa reemplazar cada página por una estética nueva. Significa preservar el side-rail, la tipografía y la paleta existentes mientras se corrigen problemas concretos, como una navegación que no cabía en móvil. El diseño se trata como código: tiene restricciones, estados y regresiones posibles.
+
+## Dónde se puso a prueba
+
+Probé este flujo al construir [Prince Club de Libros](https://prince-club-de-libros.nicolasdelrosario.com/), un catálogo con stock, ofertas, wishlist, autenticación, imágenes, contacto por WhatsApp y administración.
+
+Los problemas aparecieron en los bordes. La recuperación de autenticación no se comportaba como esperaba, algunas políticas de imágenes bloqueaban casos válidos, había errores que no estaban manejados de forma consistente y la selección de ofertas no era determinista. Ninguno se resolvía mirando un archivo aislado o aceptando la primera propuesta de un modelo.
+
+El stack fue útil porque daba un orden para investigar: recorrer el flujo, contrastar lo que el servicio prometía, modificar el punto correcto, revisar el cambio y probar el caso que lo había motivado. No evitó los errores. Hizo más difícil esconderlos detrás de una respuesta convincente.
+
+Eso es lo que busco al trabajar con IA: no una fábrica de código, sino un proceso que deje claro qué se cambió, por qué se cambió y cómo sé que no rompió otra cosa.
